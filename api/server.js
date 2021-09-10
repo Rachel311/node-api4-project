@@ -1,12 +1,16 @@
 const express = require('express');
 
 const cors = require('cors');
-const users = require('./users/users')
+const morgan = require('morgan');
+const { logger } = require('./middleware/middleware');
+const users = require('./users/users');
 
 const server = express();
 server.use(express.json());
 server.use(cors());
-server.use(users);
+server.use('/api', users);
+server.use(logger);
+server.use(morgan('dev'))
 
 
 server.get('/', (req, res) => {
@@ -16,10 +20,5 @@ server.get('/', (req, res) => {
 });
 
 
-server.use('*', (req, res) => {
-    res.json({
-        message: 'My app is awesome!'
-    })
-});
 
 module.exports = server;
